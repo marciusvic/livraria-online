@@ -1,5 +1,6 @@
 Django>=4.2,<5.0
 djangorestframework>=3.14.0
 djangorestframework-simplejwt>=5.2.2
-psycopg2-binary>=2.9.6  # Para integração com PostgreSQL
+psycopg2-binary>=2.9.6
 dj-database-url>=0.5.0
+requests>=2.25.1
