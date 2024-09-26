@@ -39,7 +39,7 @@ class LoginView(APIView):
             serialized_user = UserSerializer(user).data
             return Response({
                 'refresh': str(refresh),
-                'access': str(refresh.access_token),
+                'token': str(refresh.access_token),
                 'user': serialized_user
             }, status=status.HTTP_200_OK)
         else:
