@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model, authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 from livraria.serializers import RegisterSerializer, LoginSerializer
 from .models import Book, Cart, CartItem, Order, OrderItem
-from .serializers import BookSerializer, CartSerializer, CartItemSerializer, OrderSerializer, OrderItemSerializer
+from .serializers import BookSerializer, CartSerializer, CartItemSerializer, OrderSerializer, OrderItemSerializer, UserSerializer
 
 User = get_user_model()
 
@@ -36,9 +36,11 @@ class LoginView(APIView):
         user = authenticate(email=email, password=password)
         if user is not None:
             refresh = RefreshToken.for_user(user)
+            serialized_user = UserSerializer(user).data
             return Response({
                 'refresh': str(refresh),
                 'access': str(refresh.access_token),
+                'user': serialized_user
             }, status=status.HTTP_200_OK)
         else:
             return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
