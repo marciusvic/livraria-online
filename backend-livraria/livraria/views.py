@@ -62,6 +62,33 @@ class CartViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
         
+class CartItemViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = CartItemSerializer
+
+    def get_queryset(self):
+        return CartItem.objects.filter(cart__user=self.request.user)
+
+    def perform_create(self, serializer):
+        cart = Cart.objects.get(user=self.request.user)
+        book = serializer.validated_data['book']
+        quantity = serializer.validated_data['quantity']
+        
+        item = CartItem.objects.filter(cart=cart, book=book).first()
+        if item:
+            item.quantity += quantity
+            item.save()
+        else:
+            serializer.save(cart=cart)
+
+    def perform_destroy(self, instance):
+        instance.delete()
+
+    def perform_update(self, serializer):
+        instance = serializer.instance
+        instance.quantity = serializer.validated_data['quantity']
+        instance.save()
+
 class OrderViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = OrderSerializer
