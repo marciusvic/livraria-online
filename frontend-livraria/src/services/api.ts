@@ -55,3 +55,12 @@ export const register = async (data: RegisterUser) => {
         console.error(error);
   }
 }
+
+export const fetchBooks = async () => {
+    try {
+        const response = await axiosInstance.get("/api/livraria/books/");
+        return response.data;
+    } catch (error) {
+        console.error(error);
+    }
+}
